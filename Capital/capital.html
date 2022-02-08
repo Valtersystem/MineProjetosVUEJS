@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Capital</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/vue.js"></script>
+</head>
+
+<!-- 
+  Utilizando propriedades computed, methods e watch
+ -->
+
+<body>
+  <div id="app" class="container">
+    <h3>Selecione um, país abaixo para visualizar a sua capital.</h3>
+    <select
+      name="paises"
+      id="paises"
+      v-model="selecionado"
+      @click="mostraPais"
+    >
+      <option v-for="pais in paises" :value="pais.name">{{pais.name}}</option>
+    </select>
+
+    <p>{{capital.capital}}</p>
+  </div>
+
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+        paises: {},
+        selecionado: "",
+        capital: ""
+      },
+      computed: {
+        nomeCompleto() {
+          return this.nome + " " + this.sobrenome;
+        },
+      },
+      methods: {
+        mostraPais(event) {
+          fetch("https://restcountries.com/v2/all")
+            .then((r) => r.json())
+            .then((r) => {
+              this.paises = r;
+            });
+        },
+      },
+      watch: {
+          selecionado(valor) {
+          this.capital = this.paises.find((pais) => pais.name === valor);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
